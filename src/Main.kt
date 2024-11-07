@@ -1,4 +1,5 @@
 import java.io.File
+import java.io.IOException
 import kotlin.random.Random
 import kotlin.concurrent.schedule
 import java.util.Timer
@@ -26,8 +27,10 @@ fun main() {
     // Выводим слово на экран
     println("Запомните это слово: $randomWord")
 
+    val timePause:Long = 500;
+
     // Задержка 3 секунды
-    Timer().schedule(500) { // 1 секунда = 1000
+    Timer().schedule(timePause) { // 1 секунда = 1000
         // Очищаем экран (в консоли можно использовать несколько переносов строки)
         repeat(50) { println() }
 
@@ -38,6 +41,22 @@ fun main() {
         // Проверяем правильность введенного слова
         if (userInput == randomWord) {
             println("Правильно")
+            try {
+                val file = File("D:/balls.txt")
+                val content = file.readText()
+                var ball = content.toInt() + 1;
+                var ballString = ball.toString();
+                File("D:/balls.txt").writeText(ballString)
+                val fileRecord = File("D:/record.txt")
+                val record = fileRecord.readText().toDouble();
+                val newRecord = (timePause.toDouble()/1000);
+                if (newRecord < record){
+                    File("D:/record.txt").writeText(newRecord.toString())
+                }
+            } catch (e: IOException) {
+                println("Произошла ошибка при чтении файла: ${e.message}")
+            }
+
         } else {
             println("Ошибка")
         }
